@@ -1,0 +1,28 @@
+debug: false
+
+server:
+  error:
+    whitelabel:
+      enabled: false
+  max-http-header-size: 8KB
+  port: ${SERVER_PORT_AUTH}
+
+okta:
+  audience: ${AUDIENCE}
+
+spring:
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    open-in-view: false
+    show-sql: false
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${ISSUER_URI}

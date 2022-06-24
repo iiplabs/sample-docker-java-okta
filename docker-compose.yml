@@ -1,0 +1,40 @@
+version: '3.9'
+
+services:
+  dale-auth-db:
+    container_name: dale-auth-db
+    image: mysql/mysql-server:8.0.23
+    command: --default-authentication-plugin=mysql_native_password --lower_case_table_names=1
+    restart: always
+    volumes:
+      - db-data-auth:/var/lib/mysql
+      - ./docker/db/scripts/auth:/docker-entrypoint-initdb.d
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD_AUTH}
+      MYSQL_DATABASE: ${MYSQL_DATABASE_AUTH}
+      MYSQL_USER: ${MYSQL_USER_AUTH}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD_AUTH}
+    ports:
+      # <Port exposed> : < MySQL Port running inside container>
+      - '${MYSQL_PORT_AUTH}:3306'
+
+  dale-auth-server:
+    build:
+      context: ./dale-auth-server/
+    image: dale-auth-server:latest
+    container_name: dale-auth-server
+    restart: always
+    ports:
+      - '${SERVER_PORT_AUTH}:8081'
+    environment: 
+      SERVER_PORT_AUTH: ${SERVER_PORT_AUTH}
+      AUDIENCE: ${AUDIENCE}
+      ISSUER_URI: ${ISSUER_URI}
+      DB_URL: ${DB_URL_AUTH}
+      DB_USER: ${DB_USER_AUTH}
+      DB_PASSWORD: ${DB_PASSWORD_AUTH}
+    depends_on:
+      - dale-auth-db
+
+volumes:
+  db-data-auth:
