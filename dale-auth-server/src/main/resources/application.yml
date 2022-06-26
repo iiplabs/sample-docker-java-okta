@@ -7,9 +7,6 @@ server:
   max-http-header-size: 8KB
   port: ${SERVER_PORT_AUTH}
 
-okta:
-  audience: ${AUDIENCE}
-
 spring:
   datasource:
     url: ${DB_URL}
@@ -20,9 +17,3 @@ spring:
   jpa:
     open-in-view: false
     show-sql: false
-
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          issuer-uri: ${ISSUER_URI}

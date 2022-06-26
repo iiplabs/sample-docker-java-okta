@@ -1,7 +1,5 @@
 package com.iiplabs.dale.web;
 
-import java.util.concurrent.Executors;
-
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;

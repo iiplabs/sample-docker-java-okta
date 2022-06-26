@@ -36,7 +36,7 @@ commit;
 
 CREATE TABLE user_scopes (
   id bigint unsigned NOT NULL AUTO_INCREMENT,
-  user bigint unsigned,
+  scope_user bigint unsigned,
   scope bigint unsigned,
   inet_id varchar(50) NOT NULL,
   created datetime,
@@ -52,7 +52,7 @@ commit;
 
 alter table user_scopes add foreign key (scope)
 REFERENCES scopes(id) ON DELETE CASCADE ON UPDATE CASCADE;
-alter table user_scopes add foreign key (user)
+alter table user_scopes add foreign key (scope_user)
 REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE;
 
 commit;

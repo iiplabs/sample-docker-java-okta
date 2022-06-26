@@ -28,7 +28,7 @@ public class UserScope extends BaseModel {
 
 	@JsonBackReference
 	@ManyToOne
-	@JoinColumn(name="user")
+	@JoinColumn(name="scope_user")
 	@Fetch(FetchMode.JOIN)
 	private User user;
 	

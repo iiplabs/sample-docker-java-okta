@@ -10,6 +10,6 @@ insert into users(inet_id, email, enabled) values(uuid(), 'admin@online.com', tr
 
 commit;
 
-insert into user_scopes(user, scope, inet_id) values(1, 1, uuid());
+insert into user_scopes(scope_user, scope, inet_id) values(1, 1, uuid());
 
 commit;
