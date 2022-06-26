@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.iiplabs.dale.web.model.User;
+import com.iiplabs.dale.web.model.dto.UserDto;
 import com.iiplabs.dale.web.reps.IUserRepository;
 
 @Service
@@ -23,4 +24,9 @@ public class UserService implements IUserService {
 		return userRepository.findByEmail(email).stream().findFirst();
 	}
 	
+	@Transactional
+	public void createUser(UserDto user) {
+		throw new UnsupportedOperationException();
+	}
+
 }
