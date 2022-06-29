@@ -50,8 +50,8 @@ public class UserController {
 
     @PreAuthorize("hasAuthority('SCOPE_admin')")
     @PostMapping("/user")
-    public void createUser(@Valid @RequestBody UserDto userDto) {
-        userService.createUser(userDto);
+    public User createUser(@Valid @RequestBody UserDto userDto) {
+        return userService.createUser(userDto);
     }
 
 }

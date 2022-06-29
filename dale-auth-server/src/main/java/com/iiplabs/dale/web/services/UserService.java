@@ -25,8 +25,8 @@ public class UserService implements IUserService {
 	}
 	
 	@Transactional
-	public void createUser(UserDto user) {
-		throw new UnsupportedOperationException();
+	public User createUser(UserDto user) {
+		return new User();
 	}
 
 }

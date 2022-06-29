@@ -9,6 +9,6 @@ public interface IUserService {
 
 	Optional<User> findByEmail(final String email);
 	
-	void createUser(UserDto user);
+	User createUser(UserDto user);
 	
 }

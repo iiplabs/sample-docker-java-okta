@@ -1,17 +1,14 @@
 package com.iiplabs.dale.web.test.controllers;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.UUID;
-
-import com.iiplabs.dale.web.controllers.UserController;
-import com.iiplabs.dale.web.model.AuthorizationScope;
-import com.iiplabs.dale.web.model.User;
-import com.iiplabs.dale.web.reps.IScopeRepository;
-import com.iiplabs.dale.web.reps.IUserRepository;
-import com.iiplabs.dale.web.services.UserService;
-import com.iiplabs.dale.web.test.TestApplicationContextInitializer;
-import com.iiplabs.dale.web.utils.StringUtil;
 
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeAll;
@@ -20,13 +17,19 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
+import com.iiplabs.dale.web.controllers.UserController;
+import com.iiplabs.dale.web.model.AuthorizationScope;
+import com.iiplabs.dale.web.model.User;
+import com.iiplabs.dale.web.reps.IScopeRepository;
+import com.iiplabs.dale.web.reps.IUserRepository;
+import com.iiplabs.dale.web.test.TestApplicationContextInitializer;
+import com.iiplabs.dale.web.utils.StringUtil;
 
 @ActiveProfiles("test")
 @ContextConfiguration(initializers = TestApplicationContextInitializer.class)
@@ -45,9 +48,6 @@ public class UserControllerTest {
 	
 	@Autowired
 	private IUserRepository userRepository;
-
-  // @MockBean
-  // private UserService userService;
 
   final private String testUserEmptyBodyJson = "{}";
   final private String testUserJson = "{\"email\": \"admin@online.com\"}";
@@ -83,37 +83,56 @@ public class UserControllerTest {
 
     String base64Email = StringUtil.toBase64(email);
 
-    mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/scopes/" + base64Email))
-      .andExpect(MockMvcResultMatchers.status().isOk())
-      .andExpect(MockMvcResultMatchers.jsonPath("$").isArray())
-      .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(1)))
-      .andExpect(MockMvcResultMatchers.jsonPath("$.[0]", Matchers.equalToIgnoringCase("admin")));
+    mockMvc.perform(get("/api/v1/scopes/" + base64Email))
+      .andExpect(status().isOk())
+      .andExpect(jsonPath("$").isArray())
+      .andExpect(jsonPath("$", Matchers.hasSize(1)))
+      .andExpect(jsonPath("$.[0]", Matchers.equalToIgnoringCase("admin")));
   }
 
   @Test
   public void getNonExistingUserScopesTest() throws Exception {
     String base64Email = "123";
 
-    mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/scopes/" + base64Email))
-      .andExpect(MockMvcResultMatchers.status().isOk())
-      .andExpect(MockMvcResultMatchers.jsonPath("$").isArray())
-      .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(0)));
+    mockMvc.perform(get("/api/v1/scopes/" + base64Email))
+      .andExpect(status().isOk())
+      .andExpect(jsonPath("$").isArray())
+      .andExpect(jsonPath("$", Matchers.hasSize(0)));
+  }
+
+  @Test
+  public void createUserValidTokenWithAuthoritiesTest() throws Exception {
+    mockMvc.perform(post("/api/v1/user")
+        .with(jwt().authorities(new SimpleGrantedAuthority("SCOPE_admin")))
+      .contentType(MediaType.APPLICATION_JSON)
+      .content(testUserJson))
+      .andDo(print())
+      .andExpect(status().isOk());
+  }
+
+  @Test
+  public void createUserValidTokenNoAuthoritiesTest_Forbidden() throws Exception {
+    mockMvc.perform(post("/api/v1/user").with(jwt())
+      .contentType(MediaType.APPLICATION_JSON)
+      .content(testUserJson))
+      .andDo(print())
+      .andExpect(status().isForbidden());
   }
 
   @Test
   public void createUserNoTokenEmptyBodyTest() throws Exception {
-    mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/user")
+    mockMvc.perform(post("/api/v1/user")
       .contentType(MediaType.APPLICATION_JSON)
       .content(testUserEmptyBodyJson))
-      .andExpect(MockMvcResultMatchers.status().isBadRequest());
+      .andExpect(status().isBadRequest());
   }
 
   @Test
   public void createUserNoTokenTest() throws Exception {
-    mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/user")
+    mockMvc.perform(post("/api/v1/user")
       .contentType(MediaType.APPLICATION_JSON)
       .content(testUserJson))
-      .andExpect(MockMvcResultMatchers.status().isUnauthorized());
+      .andExpect(status().isUnauthorized());
   }
 
   private User createAdminScopeAndUser(String inetId, String email) {
