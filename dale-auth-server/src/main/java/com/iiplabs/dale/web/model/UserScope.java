@@ -16,26 +16,26 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@Getter 
-@Setter 
-@RequiredArgsConstructor 
-@ToString(callSuper=true) 
-@EqualsAndHashCode(callSuper=true, onlyExplicitlyIncluded=true)
+@Getter
+@Setter
+@RequiredArgsConstructor
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
 @SuppressWarnings("serial")
 @Entity
-@Table(name="user_scopes")
+@Table(name = "user_scopes")
 public class UserScope extends BaseModel {
 
 	@JsonBackReference
 	@ManyToOne
-	@JoinColumn(name="scope_user")
+	@JoinColumn(name = "scope_user")
 	@Fetch(FetchMode.JOIN)
 	private User user;
-	
+
 	@JsonBackReference
 	@ManyToOne
-	@JoinColumn(name="scope")
+	@JoinColumn(name = "scope")
 	@Fetch(FetchMode.JOIN)
 	private AuthorizationScope scope;
-	
+
 }

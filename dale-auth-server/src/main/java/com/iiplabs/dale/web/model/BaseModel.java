@@ -27,11 +27,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@Getter 
-@Setter 
-@RequiredArgsConstructor 
-@ToString 
-@EqualsAndHashCode(onlyExplicitlyIncluded=true)
+@Getter
+@Setter
+@RequiredArgsConstructor
+@ToString
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 @SuppressWarnings("serial")
@@ -40,47 +40,47 @@ public abstract class BaseModel implements Serializable {
 	@JsonIgnore
 	@EqualsAndHashCode.Include
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name="id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id")
 	private long id;
 
 	@EqualsAndHashCode.Include
-	@Size(max=50)
+	@Size(max = 50)
 	@NotNull
-	@Column(name="inet_id")
+	@Column(name = "inet_id")
 	private String inetId;
 
 	@JsonIgnore
 	@CreatedDate
-	@Column(name="created")
+	@Column(name = "created")
 	private LocalDateTime created;
 
 	@JsonIgnore
 	@LastModifiedDate
-	@Column(name="updated")
+	@Column(name = "updated")
 	private LocalDateTime updated;
 
 	@JsonIgnore
 	@CreatedBy
-	@Column(name="created_by")
+	@Column(name = "created_by")
 	private String createdBy;
 
 	@JsonIgnore
 	@LastModifiedBy
-	@Column(name="updated_by")
+	@Column(name = "updated_by")
 	private String updatedBy;
 
 	@JsonIgnore
 	@Version
-	@Column(name="optlock")
+	@Column(name = "optlock")
 	private int version;
-	
+
 	protected int getVersion() {
 		return version;
 	}
-	
+
 	public boolean isNew() {
 		return getId() == 0;
 	}
-	
+
 }

@@ -11,9 +11,9 @@ import javax.servlet.annotation.WebListener;
 public class SessionTrackingModeSetter implements ServletContextListener {
 
     @Override
-    public void contextInitialized (ServletContextEvent event) {
+    public void contextInitialized(ServletContextEvent event) {
         event.getServletContext()
-             .setSessionTrackingModes(EnumSet.of(SessionTrackingMode.COOKIE));
+                .setSessionTrackingModes(EnumSet.of(SessionTrackingMode.COOKIE));
     }
 
 }

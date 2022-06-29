@@ -16,14 +16,14 @@ public class UserService implements IUserService {
 
 	@Autowired
 	private IUserRepository userRepository;
-	
+
 	@Override
-	@Transactional(readOnly=true)
+	@Transactional(readOnly = true)
 	@Retryable
 	public Optional<User> findByEmail(final String email) {
 		return userRepository.findByEmail(email).stream().findFirst();
 	}
-	
+
 	@Transactional
 	public User createUser(UserDto user) {
 		return new User();

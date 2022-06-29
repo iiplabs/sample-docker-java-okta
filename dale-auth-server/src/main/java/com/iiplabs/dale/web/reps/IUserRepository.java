@@ -10,7 +10,7 @@ import com.iiplabs.dale.web.model.User;
 
 public interface IUserRepository extends JpaRepository<User, Long>, JpaSpecificationExecutor<User> {
 
-	@Transactional(readOnly=true)
+	@Transactional(readOnly = true)
 	Collection<User> findByEmail(String email);
-	
+
 }

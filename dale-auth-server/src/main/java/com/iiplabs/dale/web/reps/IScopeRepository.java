@@ -6,9 +6,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.iiplabs.dale.web.model.AuthorizationScope;
 
-public interface IScopeRepository extends JpaRepository<AuthorizationScope, Long>, JpaSpecificationExecutor<AuthorizationScope> {
+public interface IScopeRepository
+		extends JpaRepository<AuthorizationScope, Long>, JpaSpecificationExecutor<AuthorizationScope> {
 
-	@Transactional(readOnly=true)
+	@Transactional(readOnly = true)
 	AuthorizationScope findByName(String name);
-	
+
 }

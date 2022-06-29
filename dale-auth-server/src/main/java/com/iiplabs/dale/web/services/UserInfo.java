@@ -10,28 +10,28 @@ import lombok.Data;
 
 @Data
 @SuppressWarnings("serial")
-@JsonIgnoreProperties(ignoreUnknown=true)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class UserInfo implements Serializable {
 
 	@JsonProperty("email")
-  private String email;
-	
+	private String email;
+
 	@JsonProperty("email_verified")
-  private boolean emailVerified;
-	
+	private boolean emailVerified;
+
 	@JsonProperty("name")
-  private String name;
-	
+	private String name;
+
 	@JsonProperty("nickname")
-  private String nickName;
-	
+	private String nickName;
+
 	@JsonProperty("picture")
-  private String picture;
-	
+	private String picture;
+
 	@JsonProperty("sub")
 	private String sub;
-	
+
 	@JsonProperty("updated_at")
-  private Date updatedAt;
-    
+	private Date updatedAt;
+
 }

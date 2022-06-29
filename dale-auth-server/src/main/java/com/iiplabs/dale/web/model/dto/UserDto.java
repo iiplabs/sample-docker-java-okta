@@ -10,8 +10,8 @@ import lombok.Data;
 @Data
 public class UserDto implements Serializable {
 
-  @NotBlank(message="{validation.invalid_email}")
-  @Email(message="{validation.invalid_email}")
+  @NotBlank(message = "{validation.invalid_email}")
+  @Email(message = "{validation.invalid_email}")
   private String email;
 
 }

@@ -26,9 +26,8 @@ import lombok.extern.log4j.Log4j2;
 public class LocalJwtAuthenticationConverter implements ILocalJwtAuthenticationConverter {
 
 	private static final String DEFAULT_AUTHORITY_PREFIX = "SCOPE_";
-	
-	private static final Collection<String> WELL_KNOWN_AUTHORITIES_CLAIM_NAMES =
-			Arrays.asList("scope", "scp");
+
+	private static final Collection<String> WELL_KNOWN_AUTHORITIES_CLAIM_NAMES = Arrays.asList("scope", "scp");
 
 	@Autowired
 	private IUserService userService;
@@ -36,24 +35,24 @@ public class LocalJwtAuthenticationConverter implements ILocalJwtAuthenticationC
 	@Override
 	public AbstractAuthenticationToken convert(Jwt jwt) {
 		Collection<GrantedAuthority> authorities = new ArrayList<>();
-		
+
 		// standard code
 		authorities.addAll(getAuthorities(jwt).stream()
-				.map(s -> new SimpleGrantedAuthority(DEFAULT_AUTHORITY_PREFIX+s))
+				.map(s -> new SimpleGrantedAuthority(DEFAULT_AUTHORITY_PREFIX + s))
 				.collect(Collectors.toList()));
 
 		// additional role population
 		try {
 			UserInfo userInfo = JwtUserInfoCache.CACHE.get(jwt);
 			authorities.addAll(userService.findByEmail(userInfo.getEmail()).orElseGet(User::new).getScopes().stream()
-	        		.map(s -> new SimpleGrantedAuthority(DEFAULT_AUTHORITY_PREFIX+s)).collect(Collectors.toList()));
+					.map(s -> new SimpleGrantedAuthority(DEFAULT_AUTHORITY_PREFIX + s)).collect(Collectors.toList()));
 		} catch (ExecutionException e) {
 			log.error(e, e);
 		}
 
 		return new JwtAuthenticationToken(jwt, authorities);
 	}
-	
+
 	private String getAuthoritiesClaimName(Jwt jwt) {
 		for (String claimName : WELL_KNOWN_AUTHORITIES_CLAIM_NAMES) {
 			if (Boolean.TRUE.equals(jwt.containsClaim(claimName))) {
@@ -62,7 +61,7 @@ public class LocalJwtAuthenticationConverter implements ILocalJwtAuthenticationC
 		}
 		return null;
 	}
-	
+
 	private Collection<String> getAuthorities(Jwt jwt) {
 		String claimName = getAuthoritiesClaimName(jwt);
 
@@ -83,5 +82,5 @@ public class LocalJwtAuthenticationConverter implements ILocalJwtAuthenticationC
 
 		return Collections.emptyList();
 	}
-	
+
 }

@@ -8,7 +8,7 @@ import com.iiplabs.dale.web.model.dto.UserDto;
 public interface IUserService {
 
 	Optional<User> findByEmail(final String email);
-	
+
 	User createUser(UserDto user);
-	
+
 }

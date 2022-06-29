@@ -23,28 +23,28 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@Getter 
-@Setter 
-@RequiredArgsConstructor 
-@ToString(callSuper=true) 
-@EqualsAndHashCode(callSuper=true, onlyExplicitlyIncluded=true)
+@Getter
+@Setter
+@RequiredArgsConstructor
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
 @SuppressWarnings("serial")
 @Entity
-@Table(name="users")
+@Table(name = "users")
 public class User extends BaseModel {
 
-	@Column(name="enabled")
+	@Column(name = "enabled")
 	private boolean enabled;
-	
+
 	@NotNull
-	@Size(max=50)
-	@Column(name="email")
+	@Size(max = 50)
+	@Column(name = "email")
 	private String email;
 
 	@JsonIgnore
-	@OneToMany(mappedBy="user", fetch=FetchType.EAGER, cascade=CascadeType.ALL, orphanRemoval=true)
+	@OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<UserScope> userScopes = new HashSet<>();
-	
+
 	public void addScope(AuthorizationScope a) {
 		UserScope mm = new UserScope();
 		mm.setInetId(UUID.randomUUID().toString());
@@ -52,11 +52,11 @@ public class User extends BaseModel {
 		mm.setScope(a);
 		userScopes.add(mm);
 	}
-	
+
 	public Collection<String> getScopes() {
 		return userScopes.stream()
 				.map(s -> s.getScope().getName())
 				.sorted().collect(Collectors.toList());
 	}
-	
+
 }

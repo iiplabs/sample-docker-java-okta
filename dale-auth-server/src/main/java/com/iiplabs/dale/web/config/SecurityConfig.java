@@ -15,7 +15,7 @@ import com.iiplabs.dale.web.services.ILocalJwtAuthenticationConverter;
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled=true, securedEnabled=true, jsr250Enabled=true)
+@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired
@@ -23,17 +23,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity httpSecurity) throws Exception {
-        CharacterEncodingFilter filter = new CharacterEncodingFilter();
-        filter.setEncoding("UTF-8");
-        filter.setForceEncoding(true);
-        httpSecurity.addFilterBefore(filter, CsrfFilter.class);
+		CharacterEncodingFilter filter = new CharacterEncodingFilter();
+		filter.setEncoding("UTF-8");
+		filter.setForceEncoding(true);
+		httpSecurity.addFilterBefore(filter, CsrfFilter.class);
 
 		httpSecurity
-			.csrf().disable()
-			.authorizeRequests()
-			.antMatchers(HttpMethod.OPTIONS).permitAll()
-			.and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-			.and().oauth2ResourceServer().jwt().jwtAuthenticationConverter(localJwtAuthenticationConverter);
+				.csrf().disable()
+				.authorizeRequests()
+				.antMatchers(HttpMethod.OPTIONS).permitAll()
+				.and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+				.and().oauth2ResourceServer().jwt().jwtAuthenticationConverter(localJwtAuthenticationConverter);
 	}
 
 }

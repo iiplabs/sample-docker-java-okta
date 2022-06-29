@@ -6,13 +6,8 @@ import java.util.Optional;
 
 import javax.validation.Valid;
 
-import com.iiplabs.dale.web.annotations.RestControllerAnnotation;
-import com.iiplabs.dale.web.model.User;
-import com.iiplabs.dale.web.model.dto.UserDto;
-import com.iiplabs.dale.web.services.IUserService;
-import com.iiplabs.dale.web.utils.StringUtil;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,7 +15,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.iiplabs.dale.web.annotations.RestControllerAnnotation;
+import com.iiplabs.dale.web.model.User;
+import com.iiplabs.dale.web.model.dto.UserDto;
+import com.iiplabs.dale.web.services.IUserService;
+import com.iiplabs.dale.web.utils.StringUtil;
 
 import lombok.extern.log4j.Log4j2;
 
@@ -50,6 +52,7 @@ public class UserController {
 
     @PreAuthorize("hasAuthority('SCOPE_admin')")
     @PostMapping("/user")
+    @ResponseStatus(HttpStatus.CREATED)
     public User createUser(@Valid @RequestBody UserDto userDto) {
         return userService.createUser(userDto);
     }

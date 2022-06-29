@@ -9,7 +9,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 public class AuditorAwareImpl implements AuditorAware<String> {
 
 	private final static String SYSTEM_AUDITOR = "<system user>";
-	
+
 	@Override
 	public Optional<String> getCurrentAuditor() {
 		Authentication a = SecurityContextHolder.getContext().getAuthentication();

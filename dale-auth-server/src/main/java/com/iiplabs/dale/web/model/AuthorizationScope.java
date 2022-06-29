@@ -20,23 +20,23 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@Getter 
-@Setter 
-@RequiredArgsConstructor 
-@ToString(callSuper=true) 
-@EqualsAndHashCode(callSuper=true, onlyExplicitlyIncluded=true)
+@Getter
+@Setter
+@RequiredArgsConstructor
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
 @SuppressWarnings("serial")
 @Entity
-@Table(name="scopes")
+@Table(name = "scopes")
 public class AuthorizationScope extends BaseModel {
 
 	@NotNull
-	@Size(max=50)
-	@Column(name="scope_name")
+	@Size(max = 50)
+	@Column(name = "scope_name")
 	private String name;
 
 	@JsonIgnore
-	@OneToMany(mappedBy="scope", fetch=FetchType.EAGER, cascade=CascadeType.ALL, orphanRemoval=true)
+	@OneToMany(mappedBy = "scope", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<UserScope> userScopes = new HashSet<>();
-	
+
 }

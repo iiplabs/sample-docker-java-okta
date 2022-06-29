@@ -23,11 +23,11 @@ public final class JwtUserInfoCache {
 				public UserInfo load(Jwt jwt) throws Exception {
 					return AuthenticationFacade.getUserInfo(jwt);
 				}
-				
+
 			});
 
 	private JwtUserInfoCache() {
 		throw new AssertionError();
 	}
-	
+
 }

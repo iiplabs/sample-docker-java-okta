@@ -17,7 +17,7 @@ public final class AuthenticationFacade {
 	private AuthenticationFacade() {
 		throw new AssertionError();
 	}
-	
+
 	public static Authentication getAuthentication() {
 		return SecurityContextHolder.getContext().getAuthentication();
 	}
@@ -25,10 +25,11 @@ public final class AuthenticationFacade {
 	public static UserInfo getUserInfo() {
 		return getUserInfo((Jwt) getAuthentication().getPrincipal());
 	}
-	
+
 	/**
 	 * Method locates /userinfo URI and uses it to fetch user info
 	 * by the token, like email, etc.
+	 * 
 	 * @return
 	 */
 	public static UserInfo getUserInfo(Jwt principal) {
@@ -41,7 +42,7 @@ public final class AuthenticationFacade {
 					return u;
 				}).filter(Objects::nonNull).findFirst().orElseGet(UserInfo::new);
 	}
-		
+
 	private static UserInfo retrieveUserInfo(String uri, String tokenValue) {
 		WebClient client = WebClient.builder()
 				.defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
@@ -49,5 +50,5 @@ public final class AuthenticationFacade {
 				.build();
 		return client.get().uri(uri).retrieve().bodyToMono(UserInfo.class).block(Duration.ofSeconds(30));
 	}
-	
+
 }

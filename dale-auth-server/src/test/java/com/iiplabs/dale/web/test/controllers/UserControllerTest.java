@@ -39,15 +39,15 @@ public class UserControllerTest {
 
   @Autowired
   private MockMvc mockMvc;
-  
+
   @Autowired
   private UserController userController;
 
   @Autowired
-	private IScopeRepository scopeRepository;
-	
-	@Autowired
-	private IUserRepository userRepository;
+  private IScopeRepository scopeRepository;
+
+  @Autowired
+  private IUserRepository userRepository;
 
   final private String testUserEmptyBodyJson = "{}";
   final private String testUserJson = "{\"email\": \"admin@online.com\"}";
@@ -71,23 +71,23 @@ public class UserControllerTest {
   public void whenUserControllerInjected_thenNotNull() throws Exception {
     assertThat(userController).isNotNull();
   }
-  
+
   @Test
   public void getUserScopesTest() throws Exception {
     // setup admin user
-		String inetId = UUID.randomUUID().toString();
-		String email = "admin@online.com";
-		createAdminScopeAndUser(inetId, email);
+    String inetId = UUID.randomUUID().toString();
+    String email = "admin@online.com";
+    createAdminScopeAndUser(inetId, email);
     User u = userRepository.findByEmail(email).stream().findFirst().get();
     System.out.println("scopes=" + u.getScopes());
 
     String base64Email = StringUtil.toBase64(email);
 
     mockMvc.perform(get("/api/v1/scopes/" + base64Email))
-      .andExpect(status().isOk())
-      .andExpect(jsonPath("$").isArray())
-      .andExpect(jsonPath("$", Matchers.hasSize(1)))
-      .andExpect(jsonPath("$.[0]", Matchers.equalToIgnoringCase("admin")));
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$").isArray())
+        .andExpect(jsonPath("$", Matchers.hasSize(1)))
+        .andExpect(jsonPath("$.[0]", Matchers.equalToIgnoringCase("admin")));
   }
 
   @Test
@@ -95,61 +95,61 @@ public class UserControllerTest {
     String base64Email = "123";
 
     mockMvc.perform(get("/api/v1/scopes/" + base64Email))
-      .andExpect(status().isOk())
-      .andExpect(jsonPath("$").isArray())
-      .andExpect(jsonPath("$", Matchers.hasSize(0)));
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$").isArray())
+        .andExpect(jsonPath("$", Matchers.hasSize(0)));
   }
 
   @Test
   public void createUserValidTokenWithAuthoritiesTest() throws Exception {
     mockMvc.perform(post("/api/v1/user")
         .with(jwt().authorities(new SimpleGrantedAuthority("SCOPE_admin")))
-      .contentType(MediaType.APPLICATION_JSON)
-      .content(testUserJson))
-      .andDo(print())
-      .andExpect(status().isOk());
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(testUserJson))
+        .andDo(print())
+        .andExpect(status().isCreated());
   }
 
   @Test
   public void createUserValidTokenNoAuthoritiesTest_Forbidden() throws Exception {
     mockMvc.perform(post("/api/v1/user").with(jwt())
-      .contentType(MediaType.APPLICATION_JSON)
-      .content(testUserJson))
-      .andDo(print())
-      .andExpect(status().isForbidden());
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(testUserJson))
+        .andDo(print())
+        .andExpect(status().isForbidden());
   }
 
   @Test
   public void createUserNoTokenEmptyBodyTest() throws Exception {
     mockMvc.perform(post("/api/v1/user")
-      .contentType(MediaType.APPLICATION_JSON)
-      .content(testUserEmptyBodyJson))
-      .andExpect(status().isBadRequest());
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(testUserEmptyBodyJson))
+        .andExpect(status().isBadRequest());
   }
 
   @Test
   public void createUserNoTokenTest() throws Exception {
     mockMvc.perform(post("/api/v1/user")
-      .contentType(MediaType.APPLICATION_JSON)
-      .content(testUserJson))
-      .andExpect(status().isUnauthorized());
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(testUserJson))
+        .andExpect(status().isUnauthorized());
   }
 
   private User createAdminScopeAndUser(String inetId, String email) {
     String adminScope = "admin";
 
-		AuthorizationScope a = new AuthorizationScope();
-		a.setInetId(UUID.randomUUID().toString());
-		a.setName(adminScope);
-		scopeRepository.save(a);
-		
-		User u = new User();
-		u.setInetId(inetId);
-		u.setEmail(email);
+    AuthorizationScope a = new AuthorizationScope();
+    a.setInetId(UUID.randomUUID().toString());
+    a.setName(adminScope);
+    scopeRepository.save(a);
+
+    User u = new User();
+    u.setInetId(inetId);
+    u.setEmail(email);
     u.setEnabled(true);
-		u.addScope(scopeRepository.findByName(adminScope));
-		
-		return userRepository.save(u);
-	}
+    u.addScope(scopeRepository.findByName(adminScope));
+
+    return userRepository.save(u);
+  }
 
 }
