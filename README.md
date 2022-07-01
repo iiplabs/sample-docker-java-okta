@@ -26,7 +26,7 @@ docker compose up -d
 ### Shutdown the system
 
 ```bash
-docker compose up -d
+docker compose down
 ```
 
 ### Connect to logs of Spring Boot backend
@@ -40,7 +40,7 @@ docker logs --tail 50 --follow --timestamps dale-auth-server
 ### Fetch scopes for a user
 
 ```bash
-curl http://localhost:8081/api/scopes/YWRtaW5Ab25saW5lLmNvbQ
+curl http://localhost:8081/api/v1/scopes/YWRtaW5Ab25saW5lLmNvbQ
 ```
 
 ### Create new user
